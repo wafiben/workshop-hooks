@@ -1,41 +1,57 @@
-import './App.css';
-import { useState ,useEffect } from 'react';
-import Home from './Home';
+import "./App.css";
+import { useState, useEffect } from "react";
+import Task from "./Components/Task";
+import ListOFTasks from "./Components/ListOFtasks";
 
 function App() {
-const [count,setCount]=useState(0);
-const [show,setShow]=useState(false)
+  const [student, setStudent] = useState({ firstName: " ", lastName: " " });
+  const arryOftasks = [
+    { id: 0, descreption: "go to the docter", done: false },
+    { id: 1, descreption: "meeting my mom", done: false },
+  ];
+  const [tasks, setTasks] = useState(arryOftasks);
+  const AddTask = (newTask) => {
+    setTasks([...tasks, newTask]);
+  };
+  const deleteTask = (id) => {
+    setTasks(tasks.filter((elt) => elt.id != id));
+  };
+  const handleChange = (event) => {
+    setStudent({
+      ...student,
+      [event.target.id]: event.target.value,
+    });
+  };
 
-const handleIncrement=()=>{
-  setCount(count+1)
-}
-const handleDecrement=()=>{
-  if(count>0){
-    setCount(count-1)
-  }
-}
-const handleShow=()=>{
-  if(show===false){
-    setShow(true)
-  }
-  else{
-    setShow(false)
-  }
-}
-useEffect(()=>{
-console.log('mounting')
-},[count])
-
+  const onSubmit = (event) => {
+    event.preventDefault();
+    console.log(student);
+    setStudent({ firstName: " ", lastName: " " })
+  };
   return (
     <div className="App">
-    <button onClick={handleIncrement}>Increment</button>
-    {count}
-    <button onClick={handleDecrement} >Decrement</button>
-    <div>
-      <button onClick={handleShow}>Show</button>
-      {show ? <Home/>:null}
-      
-    </div>
+      <h1>TO DO APP</h1>
+      {tasks.length > 0 ? (
+        <ListOFTasks deleteTask={deleteTask} tasks={tasks} />
+      ) : (
+        "there is no tasks to show"
+      )}
+      <Task AddTask={AddTask} />
+      <div>
+        <form onSubmit={onSubmit}>
+          <input
+            id="firstName"
+            value={student.firstName}
+            onChange={handleChange}
+          />
+          <input
+            id="lastName"
+            value={student.lastName}
+            onChange={handleChange}
+          />
+          <button type="submit">Submit</button>
+        </form>
+      </div>
     </div>
   );
 }
